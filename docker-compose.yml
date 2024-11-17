@@ -1,4 +1,4 @@
-version: "3.9"
+# version: "3.9"
 name: media-stack
 services:
 
@@ -62,7 +62,7 @@ services:
   qbittorrent:
     profiles: ["vpn", "no-vpn"]
     container_name: qbittorrent
-    image: lscr.io/linuxserver/qbittorrent:4.6.5
+    image: lscr.io/linuxserver/qbittorrent:latest
 
     # Uncomment below if vpn is enabled
     # depends_on:               # Uncomment this line if vpn is enabled
@@ -94,7 +94,7 @@ services:
   radarr:
     profiles: ["vpn", "no-vpn"]
     container_name: radarr
-    image: lscr.io/linuxserver/radarr:5.7.0
+    image: lscr.io/linuxserver/radarr:latest
     networks:
       - mynetwork   # Comment this line if VPN is enabled
     ## Uncomment below lines if VPN is enabled
@@ -113,7 +113,7 @@ services:
 
   sonarr:
     profiles: ["vpn", "no-vpn"]
-    image: linuxserver/sonarr:4.0.8
+    image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     networks:
       - mynetwork   # Comment this line if VPN is enabled
@@ -131,10 +131,28 @@ services:
       - 8989:8989
     restart: unless-stopped
 
+  bazarr:
+    profiles: ["vpn", "no-vpn"]
+    container_name: bazarr
+    image: lscr.io/linuxserver/bazarr:latest
+    networks:
+      - mynetwork
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - bazarr-config:/config
+      - torrent-downloads:/movies #optional
+      - torrent-downloads:/tv #optional
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+
   prowlarr:
     profiles: ["vpn", "no-vpn"]
     container_name: prowlarr
-    image: linuxserver/prowlarr:1.20.1
+    image: lscr.io/linuxserver/prowlarr:latest
 
     # Uncomment below if vpn is enabled
     # depends_on:               # Uncomment this line if vpn is enabled
@@ -173,7 +191,7 @@ services:
 
   jellyfin:
     profiles: ["vpn", "no-vpn"]
-    image: linuxserver/jellyfin:10.9.8
+    image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
     networks:
       - mynetwork
@@ -233,6 +251,7 @@ volumes:
       o: bind
   radarr-config:
   sonarr-config:
+  bazarr-config:
   prowlarr-config:
   jellyfin-config:
   qbittorrent-config:
